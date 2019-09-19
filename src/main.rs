@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 mod each_ball;
+mod game_state;
+use game_state::GameState;
 
 fn get_player_data() -> HashMap<&'static str, Vec<f64>> {
     let mut players = HashMap::new();
@@ -22,8 +24,8 @@ fn get_player_data() -> HashMap<&'static str, Vec<f64>> {
 fn main() {
     let mut rng = rand::thread_rng();
     let players = get_player_data();
+    let game_state = GameState::new();
 
-    // TODO: Load initial state
     // Simulate each ball with weighted random number generator
     // Simulate changes after each ball
     // Until game ends
@@ -31,5 +33,4 @@ fn main() {
         "{:?}",
         each_ball::weighted_pick(players.get("Kirat Boli").unwrap().to_vec(), &mut rng)
     );
-    println!("Hello, world!");
 }
