@@ -9,12 +9,9 @@ pub enum Outcome {
 
 fn weighted_pick_index(probs: &Vec<f64>, rng: &mut ThreadRng) -> usize {
     let random_value: f64 = rng.gen();
+    let mut current_max = 0.0;
     for i in 0..probs.len() {
-        let current_max = match i {
-            0 => probs[i],
-            _ => probs[i] + probs[i - 1],
-        };
-
+        current_max += probs[i];
         if random_value <= current_max {
             return i;
         }
@@ -22,7 +19,7 @@ fn weighted_pick_index(probs: &Vec<f64>, rng: &mut ThreadRng) -> usize {
     probs.len() - 1
 }
 
-pub fn weighted_pick(probs: Vec<f64>, rng: &mut ThreadRng) -> Outcome {
+pub fn weighted_pick(probs: &Vec<f64>, rng: &mut ThreadRng) -> Outcome {
     match weighted_pick_index(&probs, rng) {
         7 => Outcome::OUT,
         s => Outcome::RUNS(s),
