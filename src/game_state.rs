@@ -64,6 +64,9 @@ impl GameState {
                 if r % 2 != 0 {
                     self.swap_batsmen()
                 }
+                if self.balls_left % 6 == 0 {
+                    self.swap_batsmen()
+                }
             }
         }
     }
