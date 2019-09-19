@@ -1,34 +1,30 @@
-struct OutcomeData {
-    score: u8,
-    probability: f64,
-}
+use rand::prelude::*;
+use rand::rngs::ThreadRng;
 
-pub struct PossibleOutcomes {
-    runs: Vec<OutcomeData>,
-    out: OutcomeData,
-}
-
-impl PossibleOutcomes {
-    pub fn new(probabilities: Vec<f64>) -> Self {
-        let (out, runs) = probabilities.split_last().unwrap();
-        PossibleOutcomes {
-            runs: (0..runs.len())
-                .map(|i| OutcomeData {
-                    score: i as u8,
-                    probability: runs[i],
-                })
-                .collect(),
-            out: OutcomeData {
-                score: 0,
-                probability: *out,
-            },
-        }
-    }
-}
-
-enum Outcome {
-    RUNS(u8),
+#[derive(Debug)]
+pub enum Outcome {
+    RUNS(usize),
     OUT,
 }
 
-// TODO: implement picking outcome with weighted probability
+fn weighted_pick_index(probs: &Vec<f64>, rng: &mut ThreadRng) -> usize {
+    let random_value: f64 = rng.gen();
+    for i in 0..probs.len() {
+        let current_max = match i {
+            0 => probs[i],
+            _ => probs[i] + probs[i - 1],
+        };
+
+        if random_value <= current_max {
+            return i;
+        }
+    }
+    probs.len() - 1
+}
+
+pub fn weighted_pick(probs: Vec<f64>, rng: &mut ThreadRng) -> Outcome {
+    match weighted_pick_index(&probs, rng) {
+        7 => Outcome::OUT,
+        s => Outcome::RUNS(s),
+    }
+}
