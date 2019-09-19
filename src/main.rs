@@ -11,6 +11,6 @@ fn main() {
     // Simulate each ball with weighted random number generator
     // Simulate changes after each ball
     // Until game ends
-    let probs = &players[0].probabilities;
+    let probs = &players[0].chances;
     println!("{:?}", each_ball::weighted_pick(probs, &mut rng));
 }

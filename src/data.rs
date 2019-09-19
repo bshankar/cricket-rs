@@ -1,13 +1,13 @@
 pub struct Player {
     pub name: &'static str,
-    pub probabilities: Vec<f64>,
+    pub chances: Vec<f64>,
 }
 
 impl Player {
-    fn new(name: &'static str, probabilities: Vec<f64>) -> Self {
+    fn new(name: &'static str, chances: Vec<f64>) -> Self {
         Player {
             name: name,
-            probabilities: probabilities,
+            chances: chances,
         }
     }
 }
