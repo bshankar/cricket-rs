@@ -1,4 +1,6 @@
-use crate::each_ball::Outcome;
+use crate::data::get_player_data;
+use crate::each_ball::{comment, weighted_pick, Outcome};
+use rand::rngs::ThreadRng;
 
 enum Winner {
     BANGALORE,
@@ -49,9 +51,8 @@ impl GameState {
         self.off_side = batting;
     }
 
-    fn play(&mut self, outcome: Outcome) {
+    fn play(&mut self, outcome: &Outcome) {
         self.balls_left -= 1;
-
         match outcome {
             Outcome::OUT => {
                 let batting = self.batting.unwrap();
@@ -59,10 +60,26 @@ impl GameState {
                 self.batting = self.next_batsman();
             }
             Outcome::RUNS(r) => {
-                self.runs_to_win -= r as isize;
+                self.runs_to_win -= *r as isize;
                 if r % 2 != 0 {
                     self.swap_batsmen()
                 }
+            }
+        }
+    }
+
+    pub fn simulate(&mut self, rng: &mut ThreadRng) {
+        let players = get_player_data();
+
+        while let Some(batsman) = self.batting {
+            let player = &players[batsman];
+            let res = weighted_pick(&player.chances, rng);
+            comment(player, &res);
+            self.play(&res);
+
+            if let Some(win) = self.winner() {
+                println!("has won!");
+                break;
             }
         }
     }

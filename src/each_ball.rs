@@ -1,3 +1,4 @@
+use crate::data::Player;
 use rand::prelude::*;
 use rand::rngs::ThreadRng;
 
@@ -24,4 +25,8 @@ pub fn weighted_pick(probs: &Vec<f64>, rng: &mut ThreadRng) -> Outcome {
         7 => Outcome::OUT,
         s => Outcome::RUNS(s),
     }
+}
+
+pub fn comment(player: &Player, res: &Outcome) {
+    println!("{} {:?}", player.name, res);
 }
