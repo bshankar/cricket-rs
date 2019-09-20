@@ -3,10 +3,23 @@ pub struct Player {
     pub chances: Vec<f64>,
 }
 
+fn check_chances(chances: &Vec<f64>) {
+    assert!(
+        chances.len() == 8,
+        "Length of chances vector should be 7. Found: {}",
+        chances.len()
+    );
+    let total_probability: f64 = chances.iter().sum();
+    assert!(
+        (total_probability - 1.0).abs() < 1e-12,
+        "Total probability: {} should be 1",
+        total_probability
+    );
+}
+
 impl Player {
     fn new(name: &'static str, chances: Vec<f64>) -> Self {
-        let total_probability: f64 = chances.iter().sum();
-        assert!((total_probability - 1.0).abs() < 1e-12, total_probability);
+        check_chances(&chances);
 
         Player {
             name: name,
