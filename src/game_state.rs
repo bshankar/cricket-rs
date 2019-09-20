@@ -31,9 +31,12 @@ impl GameState {
         }
     }
 
+    fn game_ended(&self) -> bool {
+        self.batsmen_left.len() == 0 || self.balls_left == 0
+    }
+
     fn winner(&self) -> Option<Winner> {
-        let game_ended = self.batsmen_left.len() == 0 || self.balls_left == 0;
-        if game_ended && self.runs_to_win > 0 {
+        if self.game_ended() && self.runs_to_win > 0 {
             Some(Winner::CHENNAI)
         } else if self.runs_to_win <= 0 && self.batsmen_left.len() > 1 {
             Some(Winner::BANGALORE)
@@ -110,9 +113,10 @@ impl GameState {
         for i in 0..self.batsmen_balls.len() {
             if self.batsmen_balls[i] != 0 {
                 let player = &players[i];
-                let not_out = match self.batsmen_left.contains(&i) {
-                    true => "*",
-                    _ => "",
+                let not_out = if self.batsmen_left.contains(&i) {
+                    "* "
+                } else {
+                    " "
                 };
 
                 println!(
@@ -129,8 +133,10 @@ impl GameState {
                 "\n\nBangalore won by {} wickets!",
                 self.batsmen_left.len() - 1
             );
-        } else {
+        } else if self.winner() == Some(Winner::CHENNAI) {
             println!("\n\nChennai won by {} runs!", self.runs_to_win);
+        } else {
+            println!("\n\nMatch tied between Bangalore and Chennai");
         }
         self.print_scoreboard();
     }
