@@ -25,3 +25,23 @@ pub fn weighted_pick(probs: &Vec<f64>, rng: &mut ThreadRng) -> Outcome {
         s => Outcome::RUNS(s),
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_weighted_distribution() {
+        let mut rng = rand::thread_rng();
+        let probs = vec![0.0, 0.2, 0.7, 0.1];
+
+        let simulations = 1000000.0;
+        let mut counts = vec![0.0; 4];
+        for i in 0..1000000 {
+            let a = weighted_pick_index(&probs, &mut rng);
+            assert_ne!(a, 0, "A choice with zero probability was picked!");
+            counts[a] += 1.0 / simulations;
+        }
+        println!("{:?} should be quite close to {:?}", counts, probs);
+    }
+}

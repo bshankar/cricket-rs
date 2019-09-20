@@ -3,7 +3,6 @@ mod game_simulator;
 mod game_state;
 mod player_data;
 mod weighted_score;
-
 use game_simulator::Simulator;
 
 fn main() {
