@@ -11,7 +11,9 @@ enum Winner {
 pub struct GameState {
     runs_to_win: isize,
     balls_left: usize,
-    wickets_left: Vec<usize>,
+    batsmen_left: Vec<usize>,
+    batsmen_scores: Vec<usize>,
+    batsmen_balls: Vec<usize>,
     batting: Option<usize>,
     off_side: usize,
 }
@@ -21,17 +23,19 @@ impl GameState {
         GameState {
             runs_to_win: 40,
             balls_left: 24,
-            wickets_left: (0..=3).collect(),
+            batsmen_left: (0..=3).collect(),
+            batsmen_scores: vec![0; 4],
+            batsmen_balls: vec![0; 4],
             batting: Some(0),
             off_side: 1,
         }
     }
 
     fn winner(&self) -> Option<Winner> {
-        let game_ended = self.wickets_left.len() == 0 || self.balls_left == 0;
+        let game_ended = self.batsmen_left.len() == 0 || self.balls_left == 0;
         if game_ended && self.runs_to_win > 0 {
             Some(Winner::CHENNAI)
-        } else if self.runs_to_win <= 0 && self.wickets_left.len() > 1 {
+        } else if self.runs_to_win <= 0 && self.batsmen_left.len() > 1 {
             Some(Winner::BANGALORE)
         } else {
             None
@@ -39,7 +43,7 @@ impl GameState {
     }
 
     fn next_batsman(&self) -> Option<usize> {
-        for &w in &self.wickets_left {
+        for &w in &self.batsmen_left {
             if w != self.off_side {
                 return Some(w);
             }
@@ -63,15 +67,18 @@ impl GameState {
     }
 
     fn play(&mut self, outcome: &Outcome) {
+        let batsman = self.batting.unwrap();
         self.balls_left -= 1;
+        self.batsmen_balls[batsman] += 1;
+
         match outcome {
             Outcome::OUT => {
-                let batting = self.batting.unwrap();
-                self.wickets_left.retain(|&w| w != batting);
+                self.batsmen_left.retain(|&b| b != batsman);
                 self.batting = self.next_batsman();
             }
             Outcome::RUNS(r) => {
                 self.runs_to_win -= *r as isize;
+                self.batsmen_scores[batsman] += *r;
                 self.rotate_batsmen(*r);
             }
         }
@@ -86,8 +93,12 @@ impl GameState {
             );
         }
 
+        let batsman = self.batting.unwrap();
         match outcome {
-            Outcome::OUT => println!("{} is out!", player.name),
+            Outcome::OUT => println!(
+                "{} {} ({}) is out!",
+                player.name, self.batsmen_scores[batsman], self.batsmen_balls[batsman]
+            ),
             Outcome::RUNS(r) => println!("{} scores {} runs", player.name, r),
         }
     }
