@@ -84,7 +84,7 @@ impl GameState {
         }
     }
 
-    fn do_commentary(&self, player: &Player, outcome: &Outcome) {
+    fn comment_balls_left(&self) {
         if self.balls_left % 6 == 0 {
             println!(
                 "\n{} overs left. {} runs to win",
@@ -92,7 +92,9 @@ impl GameState {
                 self.runs_to_win
             );
         }
+    }
 
+    fn comment_outcome(&self, player: &Player, outcome: &Outcome) {
         let batsman = self.batting.unwrap();
         match outcome {
             Outcome::OUT => println!(
@@ -103,15 +105,44 @@ impl GameState {
         }
     }
 
-    fn print_summary(&self) {}
+    fn print_scoreboard(&self) {
+        let players = get_player_data();
+        for i in 0..self.batsmen_balls.len() {
+            if self.batsmen_balls[i] != 0 {
+                let player = &players[i];
+                let not_out = match self.batsmen_left.contains(&i) {
+                    true => "*",
+                    _ => "",
+                };
+
+                println!(
+                    "{} {}{}({})",
+                    player.name, self.batsmen_scores[i], not_out, self.batsmen_balls[i]
+                )
+            }
+        }
+    }
+
+    fn print_summary(&self) {
+        if self.winner() == Some(Winner::BANGALORE) {
+            println!(
+                "\n\nBangalore won by {} wickets!",
+                self.batsmen_left.len() - 1
+            );
+        } else {
+            println!("\n\nChennai won by {} runs!", self.runs_to_win);
+        }
+        self.print_scoreboard();
+    }
 
     pub fn simulate(&mut self, rng: &mut ThreadRng) {
         let players = get_player_data();
         while self.winner() == None {
             let player = &players[self.batting.unwrap()];
+            self.comment_balls_left();
             let outcome = &weighted_pick(&player.chances, rng);
-            self.do_commentary(player, outcome);
             self.play(outcome);
+            self.comment_outcome(player, outcome);
         }
         self.print_summary();
     }
