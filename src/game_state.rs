@@ -1,7 +1,8 @@
-use crate::data::get_player_data;
-use crate::each_ball::{comment, weighted_pick, Outcome};
+use crate::players::{get_player_data, Player};
+use crate::weighted_score::{weighted_pick, Outcome};
 use rand::rngs::ThreadRng;
 
+#[derive(PartialEq)]
 enum Winner {
     BANGALORE,
     CHENNAI,
@@ -27,9 +28,10 @@ impl GameState {
     }
 
     fn winner(&self) -> Option<Winner> {
-        if (self.wickets_left.len() == 0 || self.balls_left == 0) && self.runs_to_win > 0 {
+        let game_ended = self.wickets_left.len() == 0 || self.balls_left == 0;
+        if game_ended && self.runs_to_win > 0 {
             Some(Winner::CHENNAI)
-        } else if self.runs_to_win <= 0 && (self.balls_left >= 0 && self.wickets_left.len() > 0) {
+        } else if self.runs_to_win <= 0 && self.wickets_left.len() > 1 {
             Some(Winner::BANGALORE)
         } else {
             None
@@ -51,6 +53,15 @@ impl GameState {
         self.off_side = batting;
     }
 
+    fn rotate_batsmen(&mut self, runs: usize) {
+        if runs % 2 != 0 {
+            self.swap_batsmen()
+        }
+        if self.balls_left % 6 == 0 {
+            self.swap_batsmen()
+        }
+    }
+
     fn play(&mut self, outcome: &Outcome) {
         self.balls_left -= 1;
         match outcome {
@@ -61,12 +72,7 @@ impl GameState {
             }
             Outcome::RUNS(r) => {
                 self.runs_to_win -= *r as isize;
-                if r % 2 != 0 {
-                    self.swap_batsmen()
-                }
-                if self.balls_left % 6 == 0 {
-                    self.swap_batsmen()
-                }
+                self.rotate_batsmen(*r);
             }
         }
     }

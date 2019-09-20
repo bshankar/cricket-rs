@@ -1,6 +1,6 @@
-mod data;
-mod each_ball;
 mod game_state;
+mod players;
+mod weighted_score;
 use game_state::GameState;
 
 fn main() {
