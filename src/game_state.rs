@@ -36,7 +36,7 @@ impl GameState {
 
     pub fn game_result(&self) -> Option<GameResult> {
         if self.game_ended() {
-            if self.runs_to_win > 0 {
+            if self.runs_to_win > 1 {
                 Some(GameResult::ChennaiWins)
             } else if self.runs_to_win <= 0 {
                 Some(GameResult::BangaloreWins)
