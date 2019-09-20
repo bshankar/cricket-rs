@@ -32,7 +32,7 @@ impl GameState {
     }
 
     fn game_ended(&self) -> bool {
-        self.batsmen_left.len() == 0 || self.balls_left == 0
+        self.batsmen_left.len() == 1 || self.balls_left == 0
     }
 
     fn winner(&self) -> Option<Winner> {
@@ -97,12 +97,11 @@ impl GameState {
         }
     }
 
-    fn comment_outcome(&self, player: &Player, outcome: &Outcome) {
-        let batsman = self.batting.unwrap();
+    fn comment_outcome(&self, batting: usize, player: &Player, outcome: &Outcome) {
         match outcome {
             Outcome::OUT => println!(
                 "{} {} ({}) is out!",
-                player.name, self.batsmen_scores[batsman], self.batsmen_balls[batsman]
+                player.name, self.batsmen_scores[batting], self.batsmen_balls[batting]
             ),
             Outcome::RUNS(r) => println!("{} scores {} runs", player.name, r),
         }
@@ -143,12 +142,13 @@ impl GameState {
 
     pub fn simulate(&mut self, rng: &mut ThreadRng) {
         let players = get_player_data();
-        while self.winner() == None {
-            let player = &players[self.batting.unwrap()];
+        while !self.game_ended() {
+            let batting = self.batting.unwrap();
+            let player = &players[batting];
             self.comment_balls_left();
             let outcome = &weighted_pick(&player.chances, rng);
             self.play(outcome);
-            self.comment_outcome(player, outcome);
+            self.comment_outcome(batting, player, outcome);
         }
         self.print_summary();
     }
