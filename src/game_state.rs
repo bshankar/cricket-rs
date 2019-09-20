@@ -3,9 +3,10 @@ use crate::weighted_score::{weighted_pick, Outcome};
 use rand::rngs::ThreadRng;
 
 #[derive(PartialEq)]
-enum Winner {
-    BANGALORE,
-    CHENNAI,
+enum GameResult {
+    BangaloreWins,
+    ChennaiWins,
+    Tie,
 }
 
 pub struct GameState {
@@ -32,14 +33,18 @@ impl GameState {
     }
 
     fn game_ended(&self) -> bool {
-        self.batsmen_left.len() == 1 || self.balls_left == 0
+        self.batsmen_left.len() == 1 || self.balls_left == 0 || self.runs_to_win <= 0
     }
 
-    fn winner(&self) -> Option<Winner> {
-        if self.game_ended() && self.runs_to_win > 0 {
-            Some(Winner::CHENNAI)
-        } else if self.runs_to_win <= 0 && self.batsmen_left.len() > 1 {
-            Some(Winner::BANGALORE)
+    fn game_result(&self) -> Option<GameResult> {
+        if self.game_ended() {
+            if self.runs_to_win > 0 {
+                Some(GameResult::ChennaiWins)
+            } else if self.runs_to_win <= 0 {
+                Some(GameResult::BangaloreWins)
+            } else {
+                Some(GameResult::Tie)
+            }
         } else {
             None
         }
@@ -127,14 +132,14 @@ impl GameState {
     }
 
     fn print_summary(&self) {
-        if self.winner() == Some(Winner::BANGALORE) {
+        if self.game_result() == Some(GameResult::BangaloreWins) {
             println!(
                 "\n\nBangalore won by {} wickets!",
                 self.batsmen_left.len() - 1
             );
-        } else if self.winner() == Some(Winner::CHENNAI) {
+        } else if self.game_result() == Some(GameResult::ChennaiWins) {
             println!("\n\nChennai won by {} runs!", self.runs_to_win);
-        } else {
+        } else if self.game_result() == Some(GameResult::Tie) {
             println!("\n\nMatch tied between Bangalore and Chennai");
         }
         self.print_scoreboard();
