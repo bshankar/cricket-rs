@@ -5,6 +5,9 @@ pub struct Player {
 
 impl Player {
     fn new(name: &'static str, chances: Vec<f64>) -> Self {
+        let total_probability: f64 = chances.iter().sum();
+        assert!((total_probability - 1.0).abs() < 1e-12, total_probability);
+
         Player {
             name: name,
             chances: chances,
