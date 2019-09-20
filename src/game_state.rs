@@ -77,19 +77,31 @@ impl GameState {
         }
     }
 
+    fn do_commentary(&self, player: &Player, outcome: &Outcome) {
+        if self.balls_left % 6 == 0 {
+            println!(
+                "\n{} overs left. {} runs to win",
+                self.balls_left / 6,
+                self.runs_to_win
+            );
+        }
+
+        match outcome {
+            Outcome::OUT => println!("{} is out!", player.name),
+            Outcome::RUNS(r) => println!("{} scores {} runs", player.name, r),
+        }
+    }
+
+    fn print_summary(&self) {}
+
     pub fn simulate(&mut self, rng: &mut ThreadRng) {
         let players = get_player_data();
-
-        while let Some(batsman) = self.batting {
-            let player = &players[batsman];
-            let res = weighted_pick(&player.chances, rng);
-            comment(player, &res);
-            self.play(&res);
-
-            if let Some(win) = self.winner() {
-                println!("has won!");
-                break;
-            }
+        while self.winner() == None {
+            let player = &players[self.batting.unwrap()];
+            let outcome = &weighted_pick(&player.chances, rng);
+            self.do_commentary(player, outcome);
+            self.play(outcome);
         }
+        self.print_summary();
     }
 }
