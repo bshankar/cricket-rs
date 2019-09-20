@@ -50,7 +50,7 @@ impl GameState {
     }
 
     fn next_batsman(&self) -> Option<usize> {
-        for &w in &self.batsmen_left {
+        for &w in self.batsmen_left.iter() {
             if w != self.off_side {
                 return Some(w);
             }
@@ -212,8 +212,9 @@ mod tests {
         };
         assert_eq!(game_state.game_ended(), true);
     }
+
     #[test]
-    fn game_end_balls_negative() {
+    fn game_end_runs_negative() {
         let game_state = GameState {
             runs_to_win: -5,
             ..GameState::new()
@@ -240,7 +241,7 @@ mod tests {
     }
 
     #[test]
-    fn game_result_balls_over_runs_left() {
+    fn game_result_balls_over() {
         let game_state = GameState {
             balls_left: 0,
             ..GameState::new()
@@ -293,5 +294,15 @@ mod tests {
             ..GameState::new()
         };
         assert_eq!(game_state.game_result(), Some(GameResult::ChennaiWins));
+    }
+
+    #[test]
+    fn game_result_wickets_over_one_run() {
+        let game_state = GameState {
+            batsmen_left: vec![0],
+            runs_to_win: 1,
+            ..GameState::new()
+        };
+        assert_eq!(game_state.game_result(), Some(GameResult::Tie));
     }
 }

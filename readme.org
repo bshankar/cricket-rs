@@ -53,22 +53,23 @@ cricket-rs has unit test cases which can be run
 
 #+BEGIN_SRC bash
 $ cargo test
-   Finished dev [unoptimized + debuginfo] target(s) in 0.03s
+    Finished dev [unoptimized + debuginfo] target(s) in 0.03s
      Running target/debug/deps/cricket_rs-24ecb3adaf9c5df5
 
-running 18 tests
-test game_state::tests::game_end_balls_negative ... ok
+running 19 tests
 test game_state::tests::game_end_balls_over ... ok
 test game_state::tests::game_end_none ... ok
+test game_state::tests::game_end_runs_negative ... ok
 test game_state::tests::game_end_runs_over ... ok
 test game_state::tests::game_end_wickets_over ... ok
+test game_state::tests::game_result_balls_over ... ok
 test game_state::tests::game_result_balls_over_one_run ... ok
-test game_state::tests::game_result_balls_over_runs_left ... ok
 test game_state::tests::game_result_balls_over_runs_over ... ok
 test game_state::tests::game_result_none ... ok
 test game_state::tests::game_result_runs_over ... ok
 test game_state::tests::game_result_runs_over_negative ... ok
 test game_state::tests::game_result_wickets_over ... ok
+test game_state::tests::game_result_wickets_over_one_run ... ok
 test game_state::tests::over_end ... ok
 test game_state::tests::over_end_and_odd_runs ... ok
 test game_state::tests::player_out ... ok
@@ -76,6 +77,5 @@ test game_state::tests::score_runs_even ... ok
 test game_state::tests::score_runs_odd ... ok
 test weighted_score::tests::weighted_distribution ... ok
 
-test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
-
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
 #+END_SRC
