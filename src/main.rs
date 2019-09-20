@@ -1,10 +1,13 @@
+mod game_commentator;
+mod game_simulator;
 mod game_state;
-mod players;
+mod player_data;
 mod weighted_score;
-use game_state::GameState;
+
+use game_simulator::Simulator;
 
 fn main() {
     let mut rng = rand::thread_rng();
-    let mut game = GameState::new();
-    game.simulate(&mut rng);
+    let mut game = game_state::GameState::new();
+    game.run(&player_data::get_player_data(), &mut rng);
 }

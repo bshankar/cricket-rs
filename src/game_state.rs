@@ -1,21 +1,19 @@
-use crate::players::{get_player_data, Player};
-use crate::weighted_score::{weighted_pick, Outcome};
-use rand::rngs::ThreadRng;
+use crate::weighted_score::Outcome;
 
 #[derive(PartialEq)]
-enum GameResult {
+pub enum GameResult {
     BangaloreWins,
     ChennaiWins,
     Tie,
 }
 
 pub struct GameState {
-    runs_to_win: isize,
-    balls_left: usize,
-    batsmen_left: Vec<usize>,
-    batsmen_scores: Vec<usize>,
-    batsmen_balls: Vec<usize>,
-    batting: Option<usize>,
+    pub runs_to_win: isize,
+    pub balls_left: usize,
+    pub batsmen_left: Vec<usize>,
+    pub batsmen_scores: Vec<usize>,
+    pub batsmen_balls: Vec<usize>,
+    pub batting: Option<usize>,
     off_side: usize,
 }
 
@@ -32,11 +30,11 @@ impl GameState {
         }
     }
 
-    fn game_ended(&self) -> bool {
+    pub fn game_ended(&self) -> bool {
         self.batsmen_left.len() == 1 || self.balls_left == 0 || self.runs_to_win <= 0
     }
 
-    fn game_result(&self) -> Option<GameResult> {
+    pub fn game_result(&self) -> Option<GameResult> {
         if self.game_ended() {
             if self.runs_to_win > 0 {
                 Some(GameResult::ChennaiWins)
@@ -74,7 +72,7 @@ impl GameState {
         }
     }
 
-    fn play(&mut self, outcome: &Outcome) {
+    pub fn play(&mut self, outcome: &Outcome) {
         let batsman = self.batting.unwrap();
         self.balls_left -= 1;
         self.batsmen_balls[batsman] += 1;
@@ -90,75 +88,5 @@ impl GameState {
                 self.rotate_batsmen(*r);
             }
         }
-    }
-
-    fn comment_balls_left(&self) {
-        if self.balls_left % 6 == 0 {
-            println!(
-                "\n{} overs left. {} runs to win",
-                self.balls_left / 6,
-                self.runs_to_win
-            );
-        }
-    }
-
-    fn comment_outcome(&self, batting: usize, player: &Player, outcome: &Outcome) {
-        match outcome {
-            Outcome::OUT => println!(
-                "{} {} ({} balls) is out!",
-                player.name, self.batsmen_scores[batting], self.batsmen_balls[batting]
-            ),
-            Outcome::RUNS(r) => println!("{} scores {} runs", player.name, r),
-        }
-    }
-
-    fn print_scoreboard(&self) {
-        let players = get_player_data();
-        for i in 0..self.batsmen_balls.len() {
-            if self.batsmen_balls[i] != 0 {
-                let player = &players[i];
-                let not_out = if self.batsmen_left.contains(&i) {
-                    "* "
-                } else {
-                    " "
-                };
-
-                println!(
-                    "{} {}{}({} balls)",
-                    player.name, self.batsmen_scores[i], not_out, self.batsmen_balls[i]
-                )
-            }
-        }
-    }
-
-    fn print_summary(&self) {
-        if self.game_result() == Some(GameResult::BangaloreWins) {
-            println!(
-                "\n\nBangalore won by {} wickets with {} balls left",
-                self.batsmen_left.len() - 1,
-                self.balls_left
-            );
-        } else if self.game_result() == Some(GameResult::ChennaiWins) {
-            println!(
-                "\n\nChennai won by {} runs with {} balls left",
-                self.runs_to_win, self.balls_left
-            );
-        } else if self.game_result() == Some(GameResult::Tie) {
-            println!("\n\nMatch tied between Bangalore and Chennai");
-        }
-        self.print_scoreboard();
-    }
-
-    pub fn simulate(&mut self, rng: &mut ThreadRng) {
-        let players = get_player_data();
-        while !self.game_ended() {
-            let batting = self.batting.unwrap();
-            let player = &players[batting];
-            self.comment_balls_left();
-            let outcome = &weighted_pick(&player.chances, rng);
-            self.play(outcome);
-            self.comment_outcome(batting, player, outcome);
-        }
-        self.print_summary();
     }
 }
