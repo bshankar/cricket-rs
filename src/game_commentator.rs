@@ -23,7 +23,7 @@ impl Commentator for GameState {
     fn print_ball_outcome(&self, batting: usize, player_name: &'static str, outcome: &Outcome) {
         match outcome {
             Outcome::OUT => println!(
-                "{} {} ({} balls) is out!",
+                "{} - {} ({} balls) is out!",
                 player_name, self.batsmen_scores[batting], self.batsmen_balls[batting]
             ),
             Outcome::RUNS(r) => println!("{} scores {} runs", player_name, r),
@@ -41,7 +41,7 @@ impl Commentator for GameState {
                 };
 
                 println!(
-                    "{} {}{}({} balls)",
+                    "{} - {}{}({} balls)",
                     player.name, self.batsmen_scores[i], not_out, self.batsmen_balls[i]
                 )
             }
