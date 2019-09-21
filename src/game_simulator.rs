@@ -11,12 +11,11 @@ pub trait Simulator {
 impl Simulator for GameState {
     fn run(&mut self, players: &Vec<Player>, rng: &mut ThreadRng) {
         while !self.game_ended() {
-            let batting = self.batting.unwrap();
-            let player = &players[batting];
+            let player = &players[self.batting];
             self.print_balls_left();
             let outcome = &weighted_pick(&player.bins, rng);
+            self.print_ball_outcome(self.batting, player.name, outcome);
             self.play(outcome);
-            self.print_ball_outcome(batting, player.name, outcome);
         }
         self.print_summary();
         self.print_scoreboard(players);

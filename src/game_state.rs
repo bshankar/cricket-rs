@@ -14,7 +14,7 @@ pub struct GameState {
     pub batsmen_left: Vec<usize>,
     pub batsmen_scores: Vec<usize>,
     pub batsmen_balls: Vec<usize>,
-    pub batting: Option<usize>,
+    pub batting: usize,
     off_side: usize,
 }
 
@@ -26,7 +26,7 @@ impl GameState {
             batsmen_left: (0..=3).collect(),
             batsmen_scores: vec![0; 4],
             batsmen_balls: vec![0; 4],
-            batting: Some(0),
+            batting: 0,
             off_side: 1,
         }
     }
@@ -49,18 +49,18 @@ impl GameState {
         }
     }
 
-    fn next_batsman(&self) -> Option<usize> {
-        for &w in self.batsmen_left.iter() {
-            if w != self.off_side {
-                return Some(w);
-            }
-        }
-        None
+    fn next_batsman(&self) -> usize {
+        let invalid_batsman = &self.batsmen_balls.len();
+        *self
+            .batsmen_left
+            .iter()
+            .find(|b| b != &&self.off_side)
+            .unwrap_or_else(|| invalid_batsman)
     }
 
     fn swap_batsmen(&mut self) {
-        let batting = self.batting.unwrap();
-        self.batting = Some(self.off_side);
+        let batting = self.batting;
+        self.batting = self.off_side;
         self.off_side = batting;
     }
 
@@ -74,18 +74,18 @@ impl GameState {
     }
 
     pub fn play(&mut self, outcome: &Outcome) {
-        let batsman = self.batting.unwrap();
+        let batting = self.batting;
         self.balls_left -= 1;
-        self.batsmen_balls[batsman] += 1;
+        self.batsmen_balls[batting] += 1;
 
         match outcome {
             Outcome::OUT => {
-                self.batsmen_left.retain(|&b| b != batsman);
+                self.batsmen_left.retain(|&b| b != batting);
                 self.batting = self.next_batsman();
             }
             Outcome::RUNS(r) => {
                 self.runs_to_win -= *r as isize;
-                self.batsmen_scores[batsman] += *r;
+                self.batsmen_scores[self.batting] += *r;
                 self.rotate_batsmen(*r);
             }
         }
@@ -123,7 +123,7 @@ mod tests {
                 balls_left: 23,
                 batsmen_scores: vec![1, 0, 0, 0],
                 batsmen_balls: vec![1, 0, 0, 0],
-                batting: Some(1),
+                batting: 1,
                 off_side: 0,
                 ..GameState::new()
             }
@@ -139,7 +139,7 @@ mod tests {
             GameState {
                 balls_left: 23,
                 batsmen_balls: vec![1, 0, 0, 0],
-                batting: Some(2),
+                batting: 2,
                 batsmen_left: vec![1, 2, 3],
                 ..GameState::new()
             }
@@ -158,7 +158,7 @@ mod tests {
             GameState {
                 balls_left: 18,
                 batsmen_balls: vec![1, 0, 0, 0],
-                batting: Some(1),
+                batting: 1,
                 off_side: 0,
                 ..GameState::new()
             }
@@ -179,7 +179,7 @@ mod tests {
                 balls_left: 18,
                 batsmen_balls: vec![1, 0, 0, 0],
                 batsmen_scores: vec![1, 0, 0, 0],
-                batting: Some(0),
+                batting: 0,
                 off_side: 1,
                 ..GameState::new()
             }
