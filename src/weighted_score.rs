@@ -31,7 +31,7 @@ mod tests {
         let probs = vec![0.0, 0.2, 0.7, 0.1];
         let bins = vec![0.0, 0.2, 0.9, 1.0];
 
-        let simulations = 1000000.0;
+        let simulations = 100_000.0;
         let mut counts: Vec<f64> = vec![0.0; 4];
         for _i in 0..simulations as usize {
             let a = weighted_pick_index(&bins, &mut rng);
