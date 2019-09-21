@@ -15,7 +15,7 @@ impl Commentator for GameState {
             println!(
                 "\n{} overs left. {} runs to win",
                 self.balls_left / 6,
-                self.runs_to_win
+                self.runs_left
             );
         }
     }
@@ -58,7 +58,7 @@ impl Commentator for GameState {
         } else if self.game_result() == Some(GameResult::ChennaiWins) {
             println!(
                 "\n\nChennai won by {} runs with {} balls left",
-                self.runs_to_win, self.balls_left
+                self.runs_left, self.balls_left
             );
         } else if self.game_result() == Some(GameResult::Tie) {
             println!("\n\nMatch tied between Bangalore and Chennai");

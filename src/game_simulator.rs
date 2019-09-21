@@ -37,7 +37,7 @@ mod tests {
             let mut rng = rand::thread_rng();
             let mut game = GameState::new();
             let initial_balls_left = game.balls_left;
-            let initial_runs_left = game.runs_to_win;
+            let initial_runs_left = game.runs_left;
             game.run(&get_player_data(), &mut rng);
 
             let balls_played: usize = game.batsmen_balls.iter().sum();
@@ -52,11 +52,11 @@ mod tests {
 
             let runs_played: usize = game.batsmen_scores.iter().sum();
             assert_eq!(
-                runs_played as isize + game.runs_to_win,
+                runs_played as isize + game.runs_left,
                 initial_runs_left as isize,
                 "Runs played ({}) + Runs left ({}) should be initial_runs_left ({})",
                 runs_played,
-                game.runs_to_win,
+                game.runs_left,
                 initial_runs_left
             );
 
@@ -68,7 +68,7 @@ mod tests {
                         game.batsmen_left.len()
                     );
                     assert!(
-                        game.runs_to_win <= 0,
+                        game.runs_left <= 0,
                         "Banglore won: Runs left ({}) should be less than or equal to 0",
                         game.balls_left
                     );
@@ -80,14 +80,14 @@ mod tests {
                         game.batsmen_left.len()
                     );
                     assert!(
-                        game.runs_to_win > 1,
+                        game.runs_left > 1,
                         "Chennai won: Runs left ({}) should be > 1",
                         game.balls_left
                     );
                 }
                 Some(GameResult::Tie) => {
                     assert!(
-                        game.runs_to_win == 1,
+                        game.runs_left == 1,
                         "Chennai won: Runs left ({}) should be 1",
                         game.balls_left
                     );

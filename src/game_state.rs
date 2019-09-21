@@ -9,7 +9,7 @@ pub enum GameResult {
 
 #[derive(PartialEq, Debug)]
 pub struct GameState {
-    pub runs_to_win: isize,
+    pub runs_left: isize,
     pub balls_left: usize,
     pub batsmen_left: Vec<usize>,
     pub batsmen_scores: Vec<usize>,
@@ -21,7 +21,7 @@ pub struct GameState {
 impl GameState {
     pub fn new() -> Self {
         GameState {
-            runs_to_win: 40,
+            runs_left: 40,
             balls_left: 24,
             batsmen_left: (0..=3).collect(),
             batsmen_scores: vec![0; 4],
@@ -32,14 +32,14 @@ impl GameState {
     }
 
     pub fn game_ended(&self) -> bool {
-        self.batsmen_left.len() == 1 || self.balls_left == 0 || self.runs_to_win <= 0
+        self.batsmen_left.len() == 1 || self.balls_left == 0 || self.runs_left <= 0
     }
 
     pub fn game_result(&self) -> Option<GameResult> {
         if self.game_ended() {
-            if self.runs_to_win > 1 {
+            if self.runs_left > 1 {
                 Some(GameResult::ChennaiWins)
-            } else if self.runs_to_win <= 0 {
+            } else if self.runs_left <= 0 {
                 Some(GameResult::BangaloreWins)
             } else {
                 Some(GameResult::Tie)
@@ -84,7 +84,7 @@ impl GameState {
                 self.batting = self.next_batsman();
             }
             Outcome::RUNS(r) => {
-                self.runs_to_win -= *r as isize;
+                self.runs_left -= *r as isize;
                 self.batsmen_scores[self.batting] += *r;
                 self.rotate_batsmen(*r);
             }
@@ -103,7 +103,7 @@ mod tests {
         assert_eq!(
             game_state,
             GameState {
-                runs_to_win: 34,
+                runs_left: 34,
                 balls_left: 23,
                 batsmen_scores: vec![6, 0, 0, 0],
                 batsmen_balls: vec![1, 0, 0, 0],
@@ -119,7 +119,7 @@ mod tests {
         assert_eq!(
             game_state,
             GameState {
-                runs_to_win: 39,
+                runs_left: 39,
                 balls_left: 23,
                 batsmen_scores: vec![1, 0, 0, 0],
                 batsmen_balls: vec![1, 0, 0, 0],
@@ -175,7 +175,7 @@ mod tests {
         assert_eq!(
             game_state,
             GameState {
-                runs_to_win: 39,
+                runs_left: 39,
                 balls_left: 18,
                 batsmen_balls: vec![1, 0, 0, 0],
                 batsmen_scores: vec![1, 0, 0, 0],
@@ -207,7 +207,7 @@ mod tests {
     #[test]
     fn game_end_runs_over() {
         let game_state = GameState {
-            runs_to_win: 0,
+            runs_left: 0,
             ..GameState::new()
         };
         assert_eq!(game_state.game_ended(), true);
@@ -216,7 +216,7 @@ mod tests {
     #[test]
     fn game_end_runs_negative() {
         let game_state = GameState {
-            runs_to_win: -5,
+            runs_left: -5,
             ..GameState::new()
         };
         assert_eq!(game_state.game_ended(), true);
@@ -253,7 +253,7 @@ mod tests {
     fn game_result_balls_over_one_run() {
         let game_state = GameState {
             balls_left: 0,
-            runs_to_win: 1,
+            runs_left: 1,
             ..GameState::new()
         };
         assert_eq!(game_state.game_result(), Some(GameResult::Tie));
@@ -263,7 +263,7 @@ mod tests {
     fn game_result_balls_over_runs_over() {
         let game_state = GameState {
             balls_left: 0,
-            runs_to_win: 0,
+            runs_left: 0,
             ..GameState::new()
         };
         assert_eq!(game_state.game_result(), Some(GameResult::BangaloreWins));
@@ -272,7 +272,7 @@ mod tests {
     #[test]
     fn game_result_runs_over() {
         let game_state = GameState {
-            runs_to_win: 0,
+            runs_left: 0,
             ..GameState::new()
         };
         assert_eq!(game_state.game_result(), Some(GameResult::BangaloreWins));
@@ -281,7 +281,7 @@ mod tests {
     #[test]
     fn game_result_runs_over_negative() {
         let game_state = GameState {
-            runs_to_win: -5,
+            runs_left: -5,
             ..GameState::new()
         };
         assert_eq!(game_state.game_result(), Some(GameResult::BangaloreWins));
@@ -300,7 +300,7 @@ mod tests {
     fn game_result_wickets_over_one_run() {
         let game_state = GameState {
             batsmen_left: vec![0],
-            runs_to_win: 1,
+            runs_left: 1,
             ..GameState::new()
         };
         assert_eq!(game_state.game_result(), Some(GameResult::Tie));
