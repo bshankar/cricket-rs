@@ -32,13 +32,14 @@ mod tests {
     #[test]
     fn play_games() {
         let simulations = 10_000;
+        let player_data = get_player_data();
 
         for _i in 0..simulations {
             let mut rng = rand::thread_rng();
             let mut game = GameState::new();
             let initial_balls_left = game.balls_left;
             let initial_runs_left = game.runs_left;
-            game.run(&get_player_data(), &mut rng);
+            game.run(&player_data, &mut rng);
 
             let balls_played: usize = game.batsmen_balls.iter().sum();
             assert_eq!(
