@@ -14,7 +14,7 @@ impl Simulator for GameState {
             let batting = self.batting.unwrap();
             let player = &players[batting];
             self.print_balls_left();
-            let outcome = &weighted_pick(&player.chances, rng);
+            let outcome = &weighted_pick(&player.bins, rng);
             self.play(outcome);
             self.print_ball_outcome(batting, player.name, outcome);
         }

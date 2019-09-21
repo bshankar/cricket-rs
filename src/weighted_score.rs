@@ -7,16 +7,11 @@ pub enum Outcome {
     OUT,
 }
 
-fn weighted_pick_index(probs: &Vec<f64>, rng: &mut ThreadRng) -> usize {
+fn weighted_pick_index(bins: &Vec<f64>, rng: &mut ThreadRng) -> usize {
     let random_value: f64 = rng.gen();
-    let mut current_max = 0.0;
-    for i in 0..probs.len() {
-        current_max += probs[i];
-        if random_value <= current_max {
-            return i;
-        }
-    }
-    probs.len() - 1
+    (0..bins.len())
+        .find(|&i| random_value <= bins[i])
+        .unwrap_or_else(|| bins.len() - 1)
 }
 
 pub fn weighted_pick(probs: &Vec<f64>, rng: &mut ThreadRng) -> Outcome {
@@ -34,11 +29,12 @@ mod tests {
     fn weighted_distribution() {
         let mut rng = rand::thread_rng();
         let probs = vec![0.0, 0.2, 0.7, 0.1];
+        let bins = vec![0.0, 0.2, 0.9, 1.0];
 
-        let simulations = 100000.0;
-        let mut counts = vec![0.0; 4];
+        let simulations = 1000000.0;
+        let mut counts: Vec<f64> = vec![0.0; 4];
         for _i in 0..simulations as usize {
-            let a = weighted_pick_index(&probs, &mut rng);
+            let a = weighted_pick_index(&bins, &mut rng);
             assert_ne!(a, 0, "A choice with zero probability was picked!");
             counts[a] += 1.0 / simulations;
         }
@@ -46,7 +42,7 @@ mod tests {
         // counts approaches probs as simulations -> oo
         // this test passes with a very high probability
         for i in 0..counts.len() {
-            assert!((counts[i] - probs[i]).abs() < 0.01);
+            assert!((probs[i] - counts[i]).abs() < 0.01);
         }
     }
 }

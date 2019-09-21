@@ -1,6 +1,6 @@
 pub struct Player {
     pub name: &'static str,
-    pub chances: Vec<f64>,
+    pub bins: Vec<f64>,
 }
 
 fn check_chances(chances: &Vec<f64>) {
@@ -23,9 +23,15 @@ impl Player {
 
         Player {
             name: name,
-            chances: chances,
+            bins: to_bins(&chances),
         }
     }
+}
+
+fn to_bins(chances: &Vec<f64>) -> Vec<f64> {
+    (0..chances.len())
+        .map(|i| (0..=i).map(|j| chances[j]).sum())
+        .collect()
 }
 
 pub fn get_player_data() -> Vec<Player> {
