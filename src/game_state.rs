@@ -1,4 +1,5 @@
 use crate::weighted_score::Outcome;
+use std::mem::swap;
 
 #[derive(PartialEq, Debug)]
 pub enum GameResult {
@@ -58,18 +59,12 @@ impl GameState {
             .unwrap_or_else(|| invalid_batsman)
     }
 
-    fn swap_batsmen(&mut self) {
-        let batting = self.batting;
-        self.batting = self.off_side;
-        self.off_side = batting;
-    }
-
     fn rotate_batsmen(&mut self, runs: usize) {
         if runs % 2 != 0 {
-            self.swap_batsmen()
+            swap(&mut self.batting, &mut self.off_side)
         }
         if self.balls_left % 6 == 0 {
-            self.swap_batsmen()
+            swap(&mut self.batting, &mut self.off_side)
         }
     }
 
