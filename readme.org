@@ -12,70 +12,80 @@ project. Here's how to run along with sample output.
 
 #+BEGIN_SRC bash
 $ cargo run
-  Compiling cricket-rs v0.1.0 (/home/ebs/Documents/code/cricket-rs)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.58s
+   Compiling cricket-rs v0.1.0 (/home/ebs/Documents/code/cricket-rs)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.75s
      Running `target/debug/cricket-rs`
 
-
 4 overs left. 40 runs to win
-Kirat Boli scores 6 runs
 Kirat Boli scores 1 runs
-N.S Nodhi scores 2 runs
-N.S Nodhi - 2 (2 balls) is out!
-R Rumrah scores 1 runs
-Kirat Boli scores 6 runs
-
-3 overs left. 24 runs to win
-R Rumrah scores 0 runs
-R Rumrah scores 2 runs
-R Rumrah - 3 (4 balls) is out!
-Shashi Henra scores 1 runs
-Kirat Boli scores 1 runs
-Shashi Henra scores 1 runs
-
-2 overs left. 19 runs to win
-Shashi Henra scores 1 runs
+N.S Nodhi scores 1 runs
 Kirat Boli scores 4 runs
-Kirat Boli - 18 (6 balls) is out!
+Kirat Boli scores 6 runs
+Kirat Boli scores 1 runs
+N.S Nodhi scores 1 runs
+
+3 overs left. 26 runs to win
+N.S Nodhi scores 1 runs
+Kirat Boli scores 4 runs
+Kirat Boli scores 1 runs
+N.S Nodhi scores 1 runs
+Kirat Boli scores 2 runs
+Kirat Boli scores 1 runs
+
+2 overs left. 16 runs to win
+Kirat Boli scores 2 runs
+Kirat Boli - 22 (10 balls) is out!
+R Rumrah scores 1 runs
+N.S Nodhi scores 0 runs
+N.S Nodhi scores 1 runs
+R Rumrah scores 0 runs
+
+1 overs left. 12 runs to win
+N.S Nodhi scores 4 runs
+N.S Nodhi scores 4 runs
+N.S Nodhi scores 3 runs
+R Rumrah scores 1 runs
 
 
-Chennai won by 14 runs with 9 balls left
-Kirat Boli - 18 (6 balls)
-N.S Nodhi - 2 (2 balls)
-R Rumrah - 3 (4 balls)
-Shashi Henra - 3* (3 balls)
+Bangalore won by 2 wickets with 2 balls left
+Kirat Boli - 22 (10 balls)
+N.S Nodhi - 16* (9 balls)
+R Rumrah - 2* (3 balls)
 
 #+END_SRC
 
 * Tests
 
-cricket-rs has unit test cases which can be run
+cricket-rs has unit tests which can be run using
 
 #+BEGIN_SRC bash
 $ cargo test
     Finished dev [unoptimized + debuginfo] target(s) in 0.03s
      Running target/debug/deps/cricket_rs-24ecb3adaf9c5df5
 
-running 19 tests
-test game_state::tests::game_end_balls_over ... ok
+running 21 tests
 test game_state::tests::game_end_none ... ok
+test game_state::tests::game_end_balls_over ... ok
 test game_state::tests::game_end_runs_negative ... ok
 test game_state::tests::game_end_runs_over ... ok
 test game_state::tests::game_end_wickets_over ... ok
 test game_state::tests::game_result_balls_over ... ok
-test game_state::tests::game_result_balls_over_one_run ... ok
 test game_state::tests::game_result_balls_over_runs_over ... ok
 test game_state::tests::game_result_none ... ok
-test game_state::tests::game_result_runs_over ... ok
 test game_state::tests::game_result_runs_over_negative ... ok
-test game_state::tests::game_result_wickets_over ... ok
+test game_state::tests::game_result_runs_over ... ok
+test game_state::tests::game_result_balls_over_one_run ... ok
 test game_state::tests::game_result_wickets_over_one_run ... ok
-test game_state::tests::over_end ... ok
+test game_state::tests::game_result_wickets_over ... ok
 test game_state::tests::over_end_and_odd_runs ... ok
+test game_state::tests::over_end_even_runs ... ok
 test game_state::tests::player_out ... ok
 test game_state::tests::score_runs_even ... ok
 test game_state::tests::score_runs_odd ... ok
+test player_data::tests::choices_to_bins ... ok
 test weighted_score::tests::weighted_distribution ... ok
+test game_simulator::tests::play_games ... ok
 
-test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+
 #+END_SRC
