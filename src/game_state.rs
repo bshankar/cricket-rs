@@ -147,7 +147,7 @@ mod tests {
     }
 
     #[test]
-    fn over_end() {
+    fn over_end_even_runs() {
         let mut game_state = GameState {
             balls_left: 19,
             ..GameState::new()

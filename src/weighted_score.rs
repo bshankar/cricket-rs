@@ -41,8 +41,6 @@ mod tests {
 
         // counts approaches probs as simulations -> oo
         // this test passes with a very high probability
-        for i in 0..counts.len() {
-            assert!((probs[i] - counts[i]).abs() < 0.01);
-        }
+        (0..counts.len()).for_each(|i| assert!((probs[i] - counts[i]).abs() < 0.01));
     }
 }
