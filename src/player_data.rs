@@ -51,3 +51,19 @@ pub fn get_player_data() -> Vec<Player> {
         ),
     ]
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn choices_to_bins() {
+        let chances = vec![0.0, 0.1, 0.2, 0.3, 0.1, 0.05, 0.01, 0.24];
+        let bins = vec![0.0, 0.1, 0.3, 0.6, 0.7, 0.75, 0.76, 1.0];
+
+        to_bins(&chances)
+            .iter()
+            .enumerate()
+            .for_each(|(i, v)| assert!((bins[i] - v).abs() < 1e-12));
+    }
+}
