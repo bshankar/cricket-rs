@@ -59,6 +59,7 @@ R Rumrah - 2* (3 balls)
 cricket-rs has unit tests which can be run using
 
 #+BEGIN_SRC bash
+$ cargo test
     Finished dev [unoptimized + debuginfo] target(s) in 0.03s
      Running target/debug/deps/cricket_rs-24ecb3adaf9c5df5
 
