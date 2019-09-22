@@ -7,7 +7,7 @@ runs or getting out.
 
 * Usage
 
-The rust ecosystem and cargo should be installed to run this
+The [[https://www.rust-lang.org/tools/install][rust ecosystem]] should be installed to run this
 project. Here's how to run along with sample output.
 
 #+BEGIN_SRC bash
