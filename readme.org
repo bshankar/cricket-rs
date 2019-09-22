@@ -5,6 +5,26 @@ batting and has to score 40 runs in 4 overs with 4 wickets
 left. =src/player_data.rs= has probabilities of each batsman scoring
 runs or getting out.
 
+** Project structure
+
+#+BEGIN_SRC bash
+$ tree .
+.
+├── Cargo.lock
+├── Cargo.toml                # The project manifest
+├── readme.org
+└── src
+    ├── game_commentator.rs   # Prints game commentary
+    ├── game_simulator.rs     # Simulates a game
+    ├── game_state.rs         # Manages game state
+    ├── main.rs               # Runs the game simulator
+    ├── player_data.rs        # Contains player info
+    └── weighted_score.rs     # Weighted random choice generator
+
+1 directory, 9 files
+
+#+END_SRC
+
 * Usage
 
 The [[https://www.rust-lang.org/tools/install][rust ecosystem]] should be installed to run this
