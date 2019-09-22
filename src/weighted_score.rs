@@ -41,6 +41,13 @@ mod tests {
 
         // counts approaches probs as simulations -> oo
         // this test passes with a very high probability
-        (0..counts.len()).for_each(|i| assert!((probs[i] - counts[i]).abs() < 0.01));
+        counts.iter().zip(probs).for_each(|(c, p)| {
+            assert!(
+                (c - p).abs() < 0.01,
+                "Value in counts ({}) and probs ({}) don't match",
+                c,
+                p
+            )
+        });
     }
 }

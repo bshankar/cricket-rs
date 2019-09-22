@@ -88,7 +88,7 @@ mod tests {
                 Some(GameResult::Tie) => {
                     assert!(
                         game.runs_left == 1,
-                        "Chennai won: Runs left ({}) should be 1",
+                        "Game tied: Runs left ({}) should be 1",
                         game.balls_left
                     );
                     assert!(
