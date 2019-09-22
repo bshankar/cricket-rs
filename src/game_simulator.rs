@@ -52,10 +52,9 @@ mod tests {
             );
 
             let runs_played: usize = game.batsmen_scores.iter().sum();
-            assert_eq!(
-                runs_played as isize + game.runs_left,
-                initial_runs_left as isize,
-                "Runs played ({}) + Runs left ({}) should be initial_runs_left ({})",
+            assert!(
+                runs_played + game.runs_left >= initial_runs_left,
+                "Runs played ({}) + Runs left ({}) should be >= initial_runs_left ({})",
                 runs_played,
                 game.runs_left,
                 initial_runs_left

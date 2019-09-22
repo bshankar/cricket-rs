@@ -10,7 +10,7 @@ pub enum GameResult {
 
 #[derive(PartialEq, Debug)]
 pub struct GameState {
-    pub runs_left: isize,
+    pub runs_left: usize,
     pub balls_left: usize,
     pub batsmen_left: Vec<usize>,
     pub batsmen_scores: Vec<usize>,
@@ -33,14 +33,14 @@ impl GameState {
     }
 
     pub fn game_ended(&self) -> bool {
-        self.batsmen_left.len() == 1 || self.balls_left == 0 || self.runs_left <= 0
+        self.batsmen_left.len() == 1 || self.balls_left == 0 || self.runs_left == 0
     }
 
     pub fn game_result(&self) -> Option<GameResult> {
         if self.game_ended() {
             if self.runs_left > 1 {
                 Some(GameResult::ChennaiWins)
-            } else if self.runs_left <= 0 {
+            } else if self.runs_left == 0 {
                 Some(GameResult::BangaloreWins)
             } else {
                 Some(GameResult::Tie)
@@ -79,7 +79,7 @@ impl GameState {
                 self.batting = self.next_batsman();
             }
             Outcome::RUNS(r) => {
-                self.runs_left -= *r as isize;
+                self.runs_left -= std::cmp::min(*r, self.runs_left);
                 self.batsmen_scores[self.batting] += *r;
                 self.rotate_batsmen(*r);
             }
@@ -209,15 +209,6 @@ mod tests {
     }
 
     #[test]
-    fn game_end_runs_negative() {
-        let game_state = GameState {
-            runs_left: -5,
-            ..GameState::new()
-        };
-        assert_eq!(game_state.game_ended(), true);
-    }
-
-    #[test]
     fn game_end_wickets_over() {
         let game_state = GameState {
             batsmen_left: vec![0],
@@ -268,15 +259,6 @@ mod tests {
     fn game_result_runs_over() {
         let game_state = GameState {
             runs_left: 0,
-            ..GameState::new()
-        };
-        assert_eq!(game_state.game_result(), Some(GameResult::BangaloreWins));
-    }
-
-    #[test]
-    fn game_result_runs_over_negative() {
-        let game_state = GameState {
-            runs_left: -5,
             ..GameState::new()
         };
         assert_eq!(game_state.game_result(), Some(GameResult::BangaloreWins));

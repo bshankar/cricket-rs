@@ -59,24 +59,21 @@ R Rumrah - 2* (3 balls)
 cricket-rs has unit tests which can be run using
 
 #+BEGIN_SRC bash
-$ cargo test
     Finished dev [unoptimized + debuginfo] target(s) in 0.03s
      Running target/debug/deps/cricket_rs-24ecb3adaf9c5df5
 
-running 21 tests
-test game_state::tests::game_end_none ... ok
+running 19 tests
 test game_state::tests::game_end_balls_over ... ok
-test game_state::tests::game_end_runs_negative ... ok
+test game_state::tests::game_end_none ... ok
 test game_state::tests::game_end_runs_over ... ok
 test game_state::tests::game_end_wickets_over ... ok
 test game_state::tests::game_result_balls_over ... ok
+test game_state::tests::game_result_balls_over_one_run ... ok
 test game_state::tests::game_result_balls_over_runs_over ... ok
 test game_state::tests::game_result_none ... ok
-test game_state::tests::game_result_runs_over_negative ... ok
 test game_state::tests::game_result_runs_over ... ok
-test game_state::tests::game_result_balls_over_one_run ... ok
-test game_state::tests::game_result_wickets_over_one_run ... ok
 test game_state::tests::game_result_wickets_over ... ok
+test game_state::tests::game_result_wickets_over_one_run ... ok
 test game_state::tests::over_end_and_odd_runs ... ok
 test game_state::tests::over_end_even_runs ... ok
 test game_state::tests::player_out ... ok
@@ -86,6 +83,6 @@ test player_data::tests::choices_to_bins ... ok
 test weighted_score::tests::weighted_distribution ... ok
 test game_simulator::tests::play_games ... ok
 
-test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
 
 #+END_SRC
