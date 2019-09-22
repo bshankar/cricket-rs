@@ -30,7 +30,7 @@ impl Player {
 
 fn to_bins(chances: &Vec<f64>) -> Vec<f64> {
     (0..chances.len())
-        .map(|i| (0..=i).map(|j| chances[j]).sum())
+        .map(|i| chances.iter().take(i + 1).sum())
         .collect()
 }
 
@@ -60,10 +60,13 @@ mod tests {
     fn choices_to_bins() {
         let chances = vec![0.0, 0.1, 0.2, 0.3, 0.1, 0.05, 0.01, 0.24];
         let bins = vec![0.0, 0.1, 0.3, 0.6, 0.7, 0.75, 0.76, 1.0];
-
-        to_bins(&chances)
-            .iter()
-            .enumerate()
-            .for_each(|(i, v)| assert!((bins[i] - v).abs() < 1e-12));
+        to_bins(&chances).iter().zip(bins).for_each(|(u, v)| {
+            assert!(
+                (u - v).abs() < 1e-12,
+                "Bins computed are wrong! u: {} != bins[i]: {}",
+                u,
+                v
+            )
+        });
     }
 }
